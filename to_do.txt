@@ -1,0 +1,18 @@
+1: make dot have lives-
+2: make levels end when dot runs out of lives-
+3: make ability to switch between different weapons
+4: make sound emitted by controller when hitting dot depend on color of enemy
+5: make background change color slowly-
+6: make sounds better-
+7: make game menu-
+8: put samples in an array-
+9: fix bounces-
+10: make dot change shape?-
+11: make different sized enemies?-
+12: make sure enemies don't spawn near dot-
+13: make scrolling screen? different rooms with barriers at different levels?
+14: more sfx
+15: stereo pan for sfx
+16: powerups
+17: fix bug where enemy gets stuck on top wall
+18: add loops in 3d perlin noise space for animating enemies

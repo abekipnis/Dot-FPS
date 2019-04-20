@@ -1,54 +1,101 @@
 class Dot {
-  float x, y, z,r;
-  float vx, vy, vz;
-  Dot(int x_, int y_, int z_, float vx_, float vy_, float vz_) {
-    r=20;
-    x=x_;
-    y=y_;
-    z=z_;
-    vx=vx_;
-    vy=vy_;
-    vz=vz_;
+  public PVector loc, vel, acc;
+  float r;
+  int lives;
+  color dotColor;
+  boolean alive;
+  ArrayList<PVector> traceLoc;
+  int tracelen, oldtracelen;
+  PShape trace;
+  PVector currloc;
+
+  java.awt.Polygon p; 
+  Dot(PVector loc_, PVector vel_, int lives_, color dotColor_, boolean alive_) {
+    r = 20;
+    this.loc = loc_;
+    this.vel = vel_;
+    lives = lives_;
+    dotColor = dotColor_;
+    alive = alive_;
+    tracelen = 45;
+    traceLoc = new ArrayList<PVector>();
+    p = new java.awt.Polygon();
   }
-  void updateDot() {
-    x=x+vx;
-    y=y+vy;
-  }
-  void updateDot(float vx_, float vy_, float vz_) {
-    x+=vx_;
-    y+=vy_;
-    //z+=vz_;
-    //periodic boundary conditions
-    if (x>width) {
-      vx*=-1;
-      x=0;
+  void updateDot(PVector vel_) {
+    acc = vel_;
+    vel = vel.add(acc);//.setMag(10);
+    //vel = vel_;
+    this.loc = this.loc.add(vel_);
+    //this.loc.set(this.loc.x+vel_.x, this.loc.y+vel_.y);
+    traceLoc.add(loc.copy());
+    if (traceLoc.size() > this.tracelen) {
+      traceLoc.remove(0);
     }
-    if (x<0) {
-      //vx*=-1;
-      x=width;
+    p.reset();
+    for (int i = 0; i < traceLoc.size(); i++) {
+      currloc = traceLoc.get(i).copy();
+      p.addPoint(int(currloc.x), int(currloc.y));
     }
-    if (y>height) {
-      y=0;
-     // vy*=-1;
+    p.addPoint(int(traceLoc.get(0).x), int(traceLoc.get(0).y));
+    if (loc.x>width) {
+      loc.set(0, loc.y);
+      traceLoc.clear();
     }
-    if (y<0) {
-      y=height;
-      //vy*=-1;
+    if (loc.x<0) {
+      loc.set(width, loc.y);
+      traceLoc.clear();
     }
-    if (z>width) {
-      z=0;
-      //vz*=-1;
+    if (loc.y>height) {
+      loc.set(loc.x, 0);
+      traceLoc.clear();
     }
-    if (z<0) {
-      z=width;
-     // vz*=-1;
+    if (loc.y<0) {
+      loc.set(loc.x, height);
+      traceLoc.clear();
     }
+    drawDot();
   }
   void drawDot() {
     pushMatrix();
-    translate(x, y, -z);
-    fill(light);
-    sphere(r);
+    trace = createShape();   
+    trace.beginShape();
+    for (int i = 0; i < traceLoc.size(); i++) {
+      currloc = traceLoc.get(i).copy();
+      trace.vertex(currloc.x, currloc.y);
+    }
+    trace.endShape();
+    //trace.setFill(mapcolor);
+    trace.setStroke(color(255, 0, 0));
+    trace.setStroke(blendColor(dotColor, mapcolor, SUBTRACT));
+    shape(trace, 0, 0);
+    popMatrix();
+
+    pushMatrix();
+    translate(loc.x, loc.y);
+
+    float mag = acc.mag();
+    float a = (acos(this.acc.x/mag)+PI);//%(2*PI);
+    if (this.acc.y<0 && this.acc.x<0) {
+      a = -a+PI;
+    } else if (this.acc.y<0 && this.acc.x>0) {
+      a = -a+PI;
+    }
+    rotate(a);
+    fill(color(255, 0, 0));
+    //fill(dotColor);
+    stroke(dotColor);
+    for (int i = 0; i < sineWave.length; i++) {
+      // Set stroke values to numbers read from array
+      noFill();
+      if(invincible) stroke(color(sineWave[i]*212, sineWave[i]*175, sineWave[i]*55));
+      else stroke(sineWave[i] * 255);
+      ellipse(0, 0, i+dot.r+10*mag, i+dot.r-6*mag);
+    }
+    //ellipse(0, 0, r+10*mag, r-6*mag);
+    //fill(blendColor(dotColor, color(level.level, numenemies, 150), ADD));
+    fill(color(255, 0, 0));
+    ellipse(0, 0, .5*r+5*mag, .8*r-3*mag);
+
     popMatrix();
   }
 }
