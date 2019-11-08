@@ -29,13 +29,13 @@ class Level {
     bullets = new ArrayList<Bullet>();
     enemies2 = new ArrayList<Enemy>();
     background(255, 255, 255);
-    textFont(f, 50);
-    fill(mapcolor, color(255, 0, 0));
-    stroke(color(255, 0, 0));
+    //textFont(f, 50);
+    fill(0,0,0);
+    stroke(color(0, 0, 0));
     strokeWeight(3);
     text("YOU DIED AT LEVEL "+level, 50, height/2);
     text("Press s to start again", width/2-200, height/2+50);
-    delay(3000);
+    //delay(3000);
     paused = !paused;
     if (paused) noLoop();
     return dot;
@@ -83,7 +83,7 @@ class Level {
             enemyEnemyDist = sqrt(pow(newX-enemies2.get(j).loc.x, 2)+pow(newY-enemies2.get(j).loc.x, 2));
           }
         }
-        enemies2.add(new Enemy(new PVector(newX, newY), new PVector(maxEnemySpeed*newVx, maxEnemySpeed*newVy), color(random(255), random(255), random(255)), maxEnemyRadius, enemyHealth));
+        enemies2.add(new Enemy(new PVector(newX, newY), new PVector(maxEnemySpeed*newVx, maxEnemySpeed*newVy), color(255,255,255), maxEnemyRadius, enemyHealth));
       }
     }
     return dot;

@@ -16,3 +16,11 @@
 16: powerups
 17: fix bug where enemy gets stuck on top wall
 18: add loops in 3d perlin noise space for animating enemies
+
+
+make it more of a spaceship game - add an image for the dot thats a space ship
+
+figure out how to slow down the timing between bullets, add a power up for bullets
+
+figure out timing for sound design so that it sounds more like a song
+

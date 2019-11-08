@@ -4,10 +4,12 @@ class Bullet {
   int maxlife;
   int bounces;
   color bulletColor;
-  Bullet(PVector loc_, PVector vel_, color bulletColor_,int maxlife_) {
+  int gridLoc;
+  Bullet(PVector loc_, PVector vel_, color bulletColor_, int maxlife_) {
     this.loc = loc_;
     this.vel = vel_;
     bounces = 0;
+    gridLoc = 0;
     bulletColor = bulletColor_;
     maxlife = maxlife_;
   }
@@ -33,6 +35,8 @@ class Bullet {
       bounces ++;
       b.vel.y*=-1;
     }
+    gridLoc = int(loc.x)/int(width/gridGranularity) + gridGranularity*(-1+int(loc.y)/int(height/gridGranularity));
+
     drawBullet(b, i);
   }
   //void updateBullet(PVector vel_) {
@@ -44,8 +48,8 @@ class Bullet {
   void drawBullet(Bullet b, int i) {
     pushMatrix();
     // translate(0, 0, -z);255-105-180 = hot pink
-    color from = color(0, 0, 0);
-    color to = color(255, 105, 180);
+    //color from = color(0, 0, 0);
+    //color to = color(255, 105, 180);
     //stroke(blendColor(color(map(i+1,0,bullets.size(),0,255),map(i+1,0,bullets.size(),0,105),map(i+1,0,bullets.size(),0,180)),mapcolor,SUBTRACT));
     stroke(bulletColor);
     //stroke(lerpColor(from,to,map(i+1,1,bullets.size(),0,1)));
@@ -63,7 +67,7 @@ void updatebullets() {
     if (currentbullet.lifetime > currentbullet.maxlife || currentbullet.bounces > 2) {// || currentbullet.x<0 || currentbullet.x>width || currentbullet.y<0 || currentbullet.y>height) {
       bullets.remove(currentbullet);
     }
-    currentbullet.updateBullet(currentbullet,i);
+    currentbullet.updateBullet(currentbullet, i);
     //currentbullet.drawBullet();
   }
 }

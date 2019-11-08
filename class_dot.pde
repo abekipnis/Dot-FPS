@@ -8,12 +8,13 @@ class Dot {
   int tracelen, oldtracelen;
   PShape trace;
   PVector currloc;
-
+  int gridLoc; 
   java.awt.Polygon p; 
   Dot(PVector loc_, PVector vel_, int lives_, color dotColor_, boolean alive_) {
     r = 20;
     this.loc = loc_;
     this.vel = vel_;
+    gridLoc = 0;
     lives = lives_;
     dotColor = dotColor_;
     alive = alive_;
@@ -53,6 +54,8 @@ class Dot {
       loc.set(loc.x, height);
       traceLoc.clear();
     }
+    gridLoc = int(loc.x)/int(width/gridGranularity) + gridGranularity*(-1+int(loc.y)/int(height/gridGranularity));
+
     drawDot();
   }
   void drawDot() {
@@ -75,27 +78,27 @@ class Dot {
 
     float mag = acc.mag();
     float a = (acos(this.acc.x/mag)+PI);//%(2*PI);
-    if (this.acc.y<0 && this.acc.x<0) {
+    if (this.acc.y<0 && this.acc.x<0 || this.acc.y<0 && this.acc.x>0) {
       a = -a+PI;
-    } else if (this.acc.y<0 && this.acc.x>0) {
-      a = -a+PI;
-    }
+    } 
+    //else if () {
+    //  a = -a+PI;
+    //}
     rotate(a);
     fill(color(255, 0, 0));
     //fill(dotColor);
     stroke(dotColor);
-    for (int i = 0; i < sineWave.length; i++) {
-      // Set stroke values to numbers read from array
-      noFill();
-      if(invincible) stroke(color(sineWave[i]*212, sineWave[i]*175, sineWave[i]*55));
-      else stroke(sineWave[i] * 255);
-      ellipse(0, 0, i+dot.r+10*mag, i+dot.r-6*mag);
-    }
+    //for (int i = 0; i < sineWave.length; i+=5) {
+    //  // Set stroke values to numbers read from array
+    //  noFill();
+    //  if(invincible) stroke(color(sineWave[i]*212, sineWave[i]*175, sineWave[i]*55));
+    //  else stroke(sineWave[i] * 255);
+    //  ellipse(0, 0, i+dot.r+10*mag, i+dot.r-6*mag);
+    //}
     //ellipse(0, 0, r+10*mag, r-6*mag);
     //fill(blendColor(dotColor, color(level.level, numenemies, 150), ADD));
     fill(color(255, 0, 0));
     ellipse(0, 0, .5*r+5*mag, .8*r-3*mag);
-
     popMatrix();
   }
 }

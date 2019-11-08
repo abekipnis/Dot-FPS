@@ -98,15 +98,15 @@ void initPowerUps() {
     invincibility_appearances[i] = -1;
     extra_life_appearances[i] = -1;
     double_trace_apps[i] = -1;
-    //if (i>=5) {
-    //  longer_bullets_appearances[i] = i;
-    //  extra_life_appearances[i] = i;
-    //  //double_trace_apps[i] = i;
-    //}
-    //if (i>=1) {
-    //  double_trace_apps[i] = i;
-    //  invincibility_appearances[i] = i;
-    //}
+    if (i>=5) {
+     longer_bullets_appearances[i] = i;
+     extra_life_appearances[i] = i;
+     //double_trace_apps[i] = i;
+    }
+    if (i>=1) {
+     double_trace_apps[i] = i;
+     invincibility_appearances[i] = i;
+    }
   }
   powerUps.add(new PowerUp("longer_bullets", 1000, 1000, longer_bullets_appearances, new PVector(random(width), random(height)), new PVector(random(-.5, .5), random(-.5, .5))));
   powerUps.add(new PowerUp("invincibility", 1000, 1000, invincibility_appearances, new PVector(random(width), random(height)), new PVector(random(-.5, .5), random(-.5, .5))));

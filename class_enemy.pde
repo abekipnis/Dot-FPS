@@ -10,6 +10,7 @@ class Enemy {
   int tracelen;
   boolean hitwall;
   boolean updated;
+  int gridLoc = 0;
   Enemy(PVector loc_, PVector vel_, color enemyColor_, float radius_, int health_) {
     loc = loc_;
     r = 20;
@@ -19,6 +20,7 @@ class Enemy {
     health = health_;
     updated = true;
     hitwall = false;
+    gridLoc = 0;
     for (int f=0; f<files.length; f++) {
       if (files[f].getName().equals("sound_click_sharp.wav")) {
         hitWallSoundFile = f;
@@ -63,6 +65,7 @@ class Enemy {
     }
   }
   void updateEnemy() {
+    gridLoc = int(loc.x)/int(width/gridGranularity) + gridGranularity*(-1+int(loc.y)/int(height/gridGranularity));
     float oldmag = vel.mag();
     if (!invincible || (invincible && hitwall)) {
       vel = vel.add(dot.loc.copy().sub(loc).mult(0.1)).setMag(oldmag);
@@ -97,6 +100,8 @@ class Enemy {
 
   void updateEnemy(PVector vel_) {
     updated = true;
+    gridLoc = int(loc.x)/int(width/gridGranularity) + gridGranularity*(-1+int(loc.y)/int(height/gridGranularity));
+
     if (loc.x>width) {
       vel.x*=-1;
     }
@@ -135,15 +140,15 @@ class Enemy {
     float mag = sqrt(pow(vel.x, 2)+pow(vel.y, 2));
     float a = (acos(vel.x/mag)+PI);//%(2*PI);
     if (vel.y<0 && vel.x<0) {
-     a = -a+PI;
+      a = -a+PI;
     } else if (vel.y<0 && vel.x>0) {
-     a = -a+PI;
+      a = -a+PI;
     }
     rotate(a);
-    color f = blendColor(enemyColor, mapcolor, DIFFERENCE);
-    color s = lerpColor(enemyColor, f, map(health-level.enemyHealth, 0, level.enemyHealth, 1, 0));
-    stroke(s);
-    fill(s);
+    //color f = blendColor(enemyColor, mapcolor, DIFFERENCE);
+    //color s = lerpColor(enemyColor, f, map(health-level.enemyHealth, 0, level.enemyHealth, 1, 0));
+    stroke(enemyColor);
+    fill(enemyColor);
     ellipse(0, 0, r+mag, r-mag);
     popMatrix();
     //pushMatrix();
@@ -174,15 +179,17 @@ void updateenemies() {
   for (int i=0; i < enemies2.size(); i++) {
     updateenemy = enemies2.get(i);
     PVector updateenemyloc = updateenemy.loc;
-    if (dot.p.contains(int(updateenemyloc.x), int(updateenemyloc.y))) {
-      //println("inside");
-      updateenemy.health-=1;
-      if (updateenemy.health<=0) {
-        //remove the enemy
-        deadenemies+=1;
-        enemies2.remove(updateenemy);
-        playSound(updateenemy.entrappedSoundFile, .06);
-        dot.tracelen++;
+    if (dot.gridLoc == updateenemy.gridLoc) {
+      if (dot.p.contains(int(updateenemyloc.x), int(updateenemyloc.y))) {
+        //println("inside");
+        updateenemy.health-=1;
+        if (updateenemy.health<=0) {
+          //remove the enemy
+          deadenemies+=1;
+          enemies2.remove(updateenemy);
+          playSound(updateenemy.entrappedSoundFile, .06);
+          dot.tracelen++;
+        }
       }
     }
     updateenemy.updated = false;
@@ -197,9 +204,8 @@ void updateenemies() {
       }
     } else if (dot_to_enemy <= (updateenemy.r+dot.r)/2) {
       dot.lives--;
-      serial.write('1');
+      //serial.write('1');  ##have the arduino make a noise
       enemies2.remove(i);
-      //sps[lostLifeFile].pause(false);
       playSound(lostLifeFile, .05);
     }
     //check if enemies have hit eachother, make bounce off
@@ -208,36 +214,40 @@ void updateenemies() {
       for (int k=0; k<enemies2.size(); k++) {
         if (k!=i) {
           updateenemy2 = enemies2.get(k);
-          if (updateenemyloc.dist(updateenemy2.loc) < (updateenemy.r/2+updateenemy2.r/2)) {
-            updateenemy.hitanotherEnemy(updateenemy2);
+          if (updateenemy2.gridLoc == updateenemy.gridLoc) {
+            if (updateenemyloc.dist(updateenemy2.loc) < (updateenemy.r/2+updateenemy2.r/2)) {
+              updateenemy.hitanotherEnemy(updateenemy2);
+            }
           }
         }
       }
     }
     for (int j=0; j<bullets.size(); j++) {
       currentbullet = bullets.get(j);
-      float dist = currentbullet.loc.dist(updateenemyloc);
-      if (dist <= updateenemy.r) {//&& red(u)==red(d) && blue(u)==blue(d) && green(u)==green(d)) {
-        updateenemy.health-=1;
-        for (int f=0; f<files.length; f++) {
-          if (files[f].getName().equals("synth"+updateenemy.health+".wav")) {
-            gainValues[f].setValue(.2);
-            sps[f].setLoopStart(sps[f]);
-            sps[f].setToLoopStart();
-            sps[f].start();
+      if (currentbullet.gridLoc == updateenemy.gridLoc){
+        float dist = currentbullet.loc.dist(updateenemyloc);
+        if (dist <= updateenemy.r) {//&& red(u)==red(d) && blue(u)==blue(d) && green(u)==green(d)) {
+          updateenemy.health-=1;
+          for (int f=0; f<files.length; f++) {
+            if (files[f].getName().equals("synth"+updateenemy.health+".wav")) {
+              gainValues[f].setValue(.2);
+              sps[f].setLoopStart(sps[f]);
+              sps[f].setToLoopStart();
+              sps[f].start();
+            }
           }
+          //if the enemy is out of health
+          if (updateenemy.health<=0) {
+            //remove the enemy
+            deadenemies+=1;
+            currExplosions.add(new Explosion(new PVector(updateenemyloc.x, updateenemyloc.y), new PVector(updateenemy.vel.x, updateenemy.vel.y)));
+            playSound(updateenemy.deadSoundFile, .06);
+            enemies2.remove(updateenemy);
+          }
+          //remove the bullet
+          bullets.remove(j);
+          numbullets--;
         }
-        //if the enemy is out of health
-        if (updateenemy.health<=0) {
-          //remove the enemy
-          deadenemies+=1;
-          currExplosions.add(new Explosion(new PVector(updateenemyloc.x, updateenemyloc.y), new PVector(updateenemy.vel.x, updateenemy.vel.y)));
-          playSound(updateenemy.deadSoundFile, .06);
-          enemies2.remove(updateenemy);
-        }
-        //remove the bullet
-        bullets.remove(j);
-        numbullets--;
       }
     }
     if (updateenemy.updated==false) {
