@@ -75,7 +75,7 @@ class Dot {
 
     pushMatrix();
     translate(loc.x, loc.y);
-
+    ellipse(0,0,20,20);
     float mag = acc.mag();
     float a = (acos(this.acc.x/mag)+PI);//%(2*PI);
     if (this.acc.y<0 && this.acc.x<0 || this.acc.y<0 && this.acc.x>0) {

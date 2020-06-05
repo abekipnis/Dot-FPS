@@ -4,23 +4,24 @@
 4: make sound emitted by controller when hitting dot depend on color of enemy
 5: make background change color slowly-
 6: make sounds better-
-7: make game menu-
+7: make game menu ****
 8: put samples in an array-
 9: fix bounces-
 10: make dot change shape?-
 11: make different sized enemies?-
 12: make sure enemies don't spawn near dot-
-13: make scrolling screen? different rooms with barriers at different levels?
+13: make scrolling screen? different rooms with barriers at different levels? *****
 14: more sfx
 15: stereo pan for sfx
-16: powerups
+16: powerups - 
 17: fix bug where enemy gets stuck on top wall
 18: add loops in 3d perlin noise space for animating enemies
-
-
-make it more of a spaceship game - add an image for the dot thats a space ship
-
-figure out how to slow down the timing between bullets, add a power up for bullets
-
-figure out timing for sound design so that it sounds more like a song
+19: fix collisions ******
+20: make it more of a spaceship game - add an image for the dot thats a space ship ***
+21: figure out how to slow down the timing between bullets, add a power up for bullets *****
+22: figure out timing for sound design so that it sounds more like a song **
+23: Add bomb powerups **
+24: make enemies shoot bullets too?
+25: make generic object class that other classes inherit from to simplify collisions, updating, etc. (use class Dot extends Entity{} to create the class, super(loc, vel, etc.) in the initialization of the Dot to initialize from the superclass and super.method() to call a method from the superclass) 
+26: add support for no controller/ other controller 
 
