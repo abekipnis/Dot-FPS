@@ -70,7 +70,7 @@ boolean serialavailable=false;
 void setup() 
 {
   try {
-    serial = new Serial(this, "/dev/tty.usbmodem141201", 19200);
+    serial = new Serial(this, "/dev/tty.usbmodem141101", 19200);
     receiver = new ValueReceiver(this, serial);
     receiver.observe("slidervalue");
     receiver.observe("loudness");
@@ -109,26 +109,13 @@ void setup()
   synthGain = new Gain(ac, 1, gainEnvelope);
   synthGain.addInput(carrier);
   ac.out.addInput(synthGain);
-  obank = new OscillatorBank(ac, Buffer.SAW, numenemies);
-  float data[] = {0.025};
-  obank.setGains(data);
-  ac.out.addInput(obank);
+  //obank = new OscillatorBank(ac, Buffer.SAW, numenemies);
+  //float data[] = {0.025};
+  //obank.setGains(data);
+  //ac.out.addInput(obank);
 
-  //Function ringModulation = new Function(carrier, modulator)
-  //{
-  //  public float calculate() {
-  //    // multiply the value of modulator by
-  //    // the value of the carrier
-  //    return x[0] * x[1];
-  //  }
-  //};
   g = new Gain(ac, 1, 0.5);
-  //g.addInput(ringModulation);
-  //panLFO = new WavePlayer(ac, 0.33, Buffer.SINE);
-  //p = new Panner(ac, panLFO);
-  //p.addInput(g);
-  //ac.out.addInput(g);
-  //ac.out.addInput(p);
+
   File xplodefilesdir = new File(sketchPath("")+"xplode_gif/");
   xplodefiles = xplodefilesdir.listFiles();
   File samplesdir = new File(sketchPath("")+"DrumMachine/");
@@ -179,6 +166,7 @@ void setup()
         gsp = new GranularSamplePlayer(ac, new Sample(files[i].toString()));
         sampleLength = (float)new Sample(files[i].toString()).getLength();
       }
+      println(files[i].getName());
     }
   }
   catch(Exception e)
@@ -190,21 +178,23 @@ void setup()
     exit(); // and exit the program
   }
 
-  randomnessValue = new Glide(ac, 80, 10);
-  intervalValue = new Glide(ac, 100, 100);
-  grainSizeValue = new Glide(ac, 100, 50);
-  positionValue = new Glide(ac, 50000, 30);
-  pitchValue = new Glide(ac, 1, 20);
-  gsp.setGrainInterval(intervalValue);
-  gsp.setGrainSize(grainSizeValue);
-  gsp.setPosition(positionValue);
-  gsp.setPitch(pitchValue);
-  granularGain.addInput(gsp);
-  gsp.start(); // start the granular sample player
-  ac.out.addInput(granularGain);
-
-  ac.start(); // start audio processing
-  gainValues[themeFile].setValue(0.0);
+  // SOUND STUFF
+  //randomnessValue = new Glide(ac, 80, 10);
+  //intervalValue = new Glide(ac, 100, 100);
+  //grainSizeValue = new Glide(ac, 100, 50);
+  //positionValue = new Glide(ac, 50000, 30);
+  //pitchValue = new Glide(ac, 1, 20);
+  //gsp.setGrainInterval(intervalValue);
+  //gsp.setGrainSize(grainSizeValue);
+  //gsp.setPosition(positionValue);
+  //gsp.setPitch(pitchValue);
+  //granularGain.addInput(gsp);
+  //gsp.start(); // start the granular sample player
+  //ac.out.addInput(granularGain);
+  //ac.start(); // start audio processing
+  //gainValues[themeFile].setValue(0.0);
+  
+  // GAMEPLAY STUFF
   dot = new Dot(new PVector(width/2, height/2), new PVector(1, 1), initNumLives, dotColor, true);
   f = createFont("Arial", 16, true);
   initPowerUps();
@@ -216,39 +206,24 @@ void setup()
     enemies2.add(new Enemy(new PVector(random(width), random(height)), new PVector(random(level.maxEnemySpeed), random(level.maxEnemySpeed)), color(255, 255, 255), level.maxEnemyRadius, 5));
     //}
   }
-  int maxsine = 50;
-  sineWave = new float[maxsine];
-  for (int i = 0; i < sineWave.length; i++) {
-    // Fill array with values from sin()
-    float r = map(i, 0, maxsine, 0, 5*TWO_PI);
-    sineWave[i] = abs(sin(r));
-  }
-  for (float ang = 0; ang < 2*PI; ang+=.1) {
-    sincos[0][int(ang/.1)] = cos(ang) + 1;
-    sincos[1][int(ang/.1)] = sin(ang) + 1;
-  }
-
-  flowerShapes = new PShape[width/2/frac+1];
-  for (int i=0; i<width/2; i+=20) {
-    flowerShapes[i/frac] = createShape();
-    flowerShapes[i/frac].setFill(color(255, i, i, 10));
-    flowerShapes[i/frac].setStroke(color(255, 0, 0));
-    flowerShapes[i/frac].beginShape();
-    noiseSeed(i);
-    for (float ang = 0; ang < 2*PI; ang+=.1) {
-      //float xoff = ang) + 1;
-      //float yoff = sin(ang) + 1;
-      float rnew = map(noise(sincos[0][int(ang/.1)], sincos[1][int(ang/.1)]), 0, 1, i/2, i);
-      float newx = rnew*(sincos[0][int(ang/.1)]-1);
-      float newy = rnew*(sincos[1][int(ang/.1)]-1);
-      flowerShapes[i/frac].vertex(newx, newy);
-    }
-    flowerShapes[i/frac].endShape(CLOSE);
-  }
+  
+  // SOUND STUFF
+  //int maxsine = 50;
+  //sineWave = new float[maxsine];
+  //for (int i = 0; i < sineWave.length; i++) {
+  //  // Fill array with values from sin()
+  //  float r = map(i, 0, maxsine, 0, 5*TWO_PI);
+  //  sineWave[i] = abs(sin(r));
+  //}
+  //for (float ang = 0; ang < 2*PI; ang+=.1) {
+  //  sincos[0][int(ang/.1)] = cos(ang) + 1;
+  //  sincos[1][int(ang/.1)] = sin(ang) + 1;
+  //}
 }
-//int numtimesforloudness;
+
 Dot dot;
 Enemy[] enemies;
+
 ArrayList<Enemy> enemies2 = new ArrayList<Enemy>();
 int numenemies = 1;
 int deadenemies = 0;
@@ -270,74 +245,32 @@ int initBulletMaxLifetime = 45;
 int bulletMaxLifetime = initBulletMaxLifetime;
 boolean invincible = false;
 float ang = 0;
+
 void drawbackground() {
   mapcolor = color(10*level.level, 15*level.level, 5*level.level);
   background(mapcolor);
   pushMatrix();
   translate(width/2, height/2);
-  for (int i=0; i<width/2; i+=20) {  
-    rotate(ang);//(((i/20%2==0) ? 1:-1)));
-    shape(flowerShapes[i/frac], 0, 0);
-  }
   popMatrix();
 }
-void gamestep() {
-  drawbackground();
-  ang+=.01;
-  if (serialavailable) {
-    joystick.x = map(xValue, -512, 512, 100, -100);
-    joystick.y = map(yValue, -512, 512, 100, -100);
-  } else {
-    joystick.x = xValue;
-    joystick.y = yValue;
-  }
-  if (!(abs(joystick.x)>0 && abs(joystick.y)>2)) {
-    //if the joystick has not moved, then make sure you can shoot again
-    //shooting = true;
-    sps[bulletFile].pause(true);
-  } else {//if (frameCount%4==0) {
-    //SHOOT BULLETS!!!!!
-    shootBullets();
-  }
-  updatebullets();
-  animateExplosions();
-  animatePowerUps();
-  updateenemies();
-  dot.dotColor = blendColor(dot.dotColor, mapcolor, SUBTRACT);
-  //carrierFrequency.setValue(map(dot.loc.x, 0, width, 100, 200));//+(map(xValue, -512, 208, 10, -10)));
-  //modulatorFrequency.setValue(map(dot.loc.y, 0, height, 40, 80));//+(map(yValue, -512, 512, 10, -10)));
-  textFont(f, 20);
-  fill(blendColor(mapcolor, color(255, 255, 255), DIFFERENCE));
-  stroke(blendColor(mapcolor, color(255, 255, 255), DIFFERENCE));
-  strokeWeight(2);
-  printStatus();
-  dot = level.checkfornextlevel();
-  //if (frameCount==0) {
-  //  sps[themeFile].start();
-  //}
-  //currMillis = millis();
-  grainSizeValue.setValue(abs(sqrt(2)*width/2-dot.loc.dist(new PVector(width/2, height/2))));
-  //grainSizeValue.setValue((float)dot.loc.y/5+50);
-  positionValue.setValue((float)((float)dot.loc.x / (float)width) * (sampleLength - 400));
-  if (serialavailable) {
-    serial.write('0');
-  }
-}
+
 void draw() 
 {
   if (!serialavailable) {
     if (keyPressed) {
       if (key=='w') {
-        yAxis-=2;
+        yAxis-=1.5;
       } else if (key=='s') {
-        yAxis+=2;
+        yAxis+=1.5;
       } else if (key=='a') {
-        xAxis+=2;
+        xAxis+=1.5;
       } else if (key=='d') {
-        xAxis-=2;
+        xAxis-=1.5;
       }
-    } else {
-      yAxis=xAxis=0;
+    } 
+    else {
+      yAxis*=0.99;
+      xAxis*=0.99;
     }
     if (mousePressed) {
       xValue = int(mouseX)-(int)dot.loc.x;
@@ -348,58 +281,16 @@ void draw()
     }
   }
   gamestep();
+  
+}
 
-  //println("loudness: ", loudness);
-  //println("light: ", light);
-  //println("celsius: ", celsius);
-  //println("xAxis: ", xAxis);
-  //println("yAxis: ", yAxis);
-  //println("zAxis: ", zAxis);
-  //println("xValue: ", xValue);
-  //println("vValue: ", yValue);
-  //println("button: ", button);
-  //println("button1: ", button1);
-  //println("button2: ", button2);
-}
-public void keyPressed() {
-  if (key == 'p') {
-    paused = !paused;
-    if (paused) {
-      noLoop();
-    } else {
-      loop();
-    }
-  } 
-  println("pressed");
-}
+
+
 public void shootBullets() {
-  playSound(bulletFile, .9);
+  playSound(bulletFile, .5);
   normBulletVector = joystick.normalize();
   joystick.set(joystick.x, -joystick.y);
   color newBulletColor = lerpColor(color(57, 255, 20), color(255, 105, 180), map(numbullets, 0, 47, 0, 1));
-  //color newBulletColor = color(random(255),random(255),random(255));
   bullets.add(new Bullet(dot.loc.copy(), normBulletVector.mult(bulletSpeed).copy().add(accel), newBulletColor, bulletMaxLifetime));
   numbullets = bullets.size();
-}
-
-public void printStatus() {
-  text("lives: ", 10, 100);
-  text(dot.lives, 150, 100);
-  text("dead enemies: ", 10, 150);
-  text(deadenemies, 330, 150);
-  text("number of enemies this level: ", 10, 200);
-  text(numenemies, 330, 200);
-  text("number of enemies left: ", 10, 250);
-  text(enemies2.size(), 250, 250);
-  //text(frameCount/frameRate, 250, 300);
-  text(level.level, 250, 50);
-  //text(numbullets, 300, 300);
-  if (invincible) {
-    text("you're invincible!", 300, 350);
-    text(powerUps.get(1).activated_time, 500, 350);
-  }
-  if (powerUps.get(0).activated) {
-    text("x2 lifetime bullets", 350, 400);
-    text(powerUps.get(0).activated_time, 550, 400);
-  }
 }

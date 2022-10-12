@@ -25,9 +25,7 @@ class Dot {
   void updateDot(PVector vel_) {
     acc = vel_;
     vel = vel.add(acc);//.setMag(10);
-    //vel = vel_;
     this.loc = this.loc.add(vel_);
-    //this.loc.set(this.loc.x+vel_.x, this.loc.y+vel_.y);
     traceLoc.add(loc.copy());
     if (traceLoc.size() > this.tracelen) {
       traceLoc.remove(0);

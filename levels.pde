@@ -20,9 +20,11 @@ class Level {
       newsines_and_gains[i][0]=100;
       newsines_and_gains[i][1]=0.1;
     }
-    obank.setFrequenciesAndGains(newsines_and_gains);
-    sps[themeFile].pause(true);
-    sps[themeFile].start();
+    //obank.setFrequenciesAndGains(newsines_and_gains);
+    //sps[themeFile].pause(true);
+    //sps[themeFile].start();
+    
+    // loc_, vel_, lives_, dotColor_, alive_
     Dot dot = new Dot(new PVector(width/2, height/2), new PVector(0, 0), initNumLives, dotColor, false);
     numenemies = 1;
     deadenemies = 0;
@@ -33,13 +35,13 @@ class Level {
     bullets = new ArrayList<Bullet>();
     enemies2 = new ArrayList<Enemy>();
     background(255, 255, 255);
-    //textFont(f, 50);
+    textFont(f, 50);
     fill(0, 0, 0);
     stroke(color(0, 0, 0));
     strokeWeight(3);
     text("YOU DIED AT LEVEL "+level, 50, height/2);
     text("Press P to start again", width/2-200, height/2+50);
-    //delay(3000);
+    delay(3000);
     paused = !paused;
     if (paused) noLoop();
     level = 0;
@@ -77,10 +79,7 @@ class Level {
           yToDot = dot.loc.y-newY;
           angle = atan2(newVy-yToDot, newVx-xToDot);
         }
-        //while (abs(newX-dot.x)<100 || abs(newY-dot.y)<100) {
-        //  newX = random(width);
-        //  newY = random(height);
-        //}
+
         for (int j=0; j<enemies2.size(); j++) {
           enemyEnemyDist = sqrt(pow(newX-enemies2.get(j).loc.x, 2)+pow(newY-enemies2.get(j).loc.x, 2));
           while ((abs(newX-dot.loc.x)<100 || abs(newY-dot.loc.y)<100 || enemyEnemyDist<2*maxEnemyRadius)) {

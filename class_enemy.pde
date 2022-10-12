@@ -101,7 +101,8 @@ class Enemy {
   void updateEnemy(PVector vel_) {
     updated = true;
     gridLoc = int(loc.x)/int(width/gridGranularity) + gridGranularity*(-1+int(loc.y)/int(height/gridGranularity));
-
+    //implement this solution
+    //https://stackoverflow.com/questions/13046033/an-efficient-way-to-simulate-many-particle-collisions
     if (loc.x>width) {
       vel.x*=-1;
     }
@@ -257,10 +258,11 @@ void updateenemies() {
   }
   accel = new PVector(-map(xAxis, -180, 180, -10, 10), map(yAxis, -180, 180, -10, 10));
   dot.updateDot(accel);
-  obank.setNumOscillators(numenemies);
-  obank.setFrequenciesAndGains(newsines_and_gains);
+  //obank.setNumOscillators(numenemies);
+  //obank.setFrequenciesAndGains(newsines_and_gains);
   //sps[lostLifeFile].pause(true);
 }
+
 class Explosion {
   PVector loc, vel;
   int age;

@@ -1,11 +1,12 @@
 
 class PowerUp {
-  String type; 
-  int age;//how long will the powerup stay around until it disappears
-  int activated_time;//how long will the powerup stay activated
-  color powerUpColor;
-  PVector loc, vel;
-  boolean activated;
+  // initializer for powerup object
+  String type; // the type of powerup 
+  int age; // how long will the powerup stay around until it disappears
+  int activated_time; // how long will the powerup stay activated
+  color powerUpColor; // color of the powerup
+  PVector loc, vel; // location and velocity vectors of powerup
+  boolean activated; 
   boolean visible;
   float start_time;
   int level_appearances[];
@@ -86,6 +87,7 @@ class PowerUp {
     }
   }
 }
+
 void initPowerUps() {
   int max_levels = 35;
   int longer_bullets_appearances[] = new int[max_levels];
@@ -114,8 +116,7 @@ void initPowerUps() {
   powerUps.add(new PowerUp("double_trace", 1000, 1000, double_trace_apps, new PVector(random(width), random(height)), new PVector(random(-.5, .5), random(-.5, .5))));
 }
 void animatePowerUps() {
-  //println();
-  //go through all the possible powerups
+  //go through all possible powerups
   for (int i=0; i<powerUps.size(); i++) {
     PowerUp thisPowerUp = powerUps.get(i);
     //println(thisPowerUp.type, thisPowerUp.age, thisPowerUp.activated_time, thisPowerUp.visible, thisPowerUp.activated);
